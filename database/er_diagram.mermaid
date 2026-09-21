@@ -1,0 +1,146 @@
+erDiagram
+    USERS ||--o{ PROJECTS : creates
+    USERS ||--o{ PROJECT_MEMBERS : joins
+    PROJECTS ||--o{ PROJECT_MEMBERS : includes
+    PROJECTS ||--o{ TASKS : contains
+    USERS ||--o{ TASKS : assigned_to
+    TASKS ||--o{ TASK_UPDATES : logs
+    USERS ||--o{ TASK_UPDATES : submits
+    PROJECTS ||--o{ PROJECT_RISKS : has
+    PROJECTS ||--o{ TEAM_PERFORMANCE : tracks
+    USERS ||--o{ TEAM_PERFORMANCE : measures
+    PROJECTS ||--o{ REPORTS : generates
+    USERS ||--o{ REPORTS : creates
+    USERS ||--o{ NOTIFICATIONS : receives
+    PROJECTS ||--o{ FILES : stores
+    TASKS ||--o{ FILES : attaches
+    PROJECTS ||--o{ CHAT_MESSAGES : holds
+    USERS ||--o{ CHAT_MESSAGES : sends
+
+    USERS {
+        int id PK
+        string email UK
+        string hashed_password
+        string full_name
+        string role
+        string department
+        boolean is_active
+        timestamp created_at
+    }
+
+    PROJECTS {
+        int id PK
+        string name
+        text description
+        string status
+        numeric health_score
+        numeric predicted_delay_days
+        string delay_risk_level
+        date start_date
+        date deadline
+        numeric budget
+        int created_by_id FK
+        boolean archived
+    }
+
+    PROJECT_MEMBERS {
+        int id PK
+        int project_id FK
+        int user_id FK
+        string role_in_project
+        int allocated_hours_per_week
+    }
+
+    TASKS {
+        int id PK
+        int project_id FK
+        string title
+        text description
+        int assigned_to_id FK
+        string priority
+        string status
+        numeric estimated_hours
+        numeric actual_hours
+        date deadline
+        int progress_percentage
+        boolean is_at_risk
+        text risk_reason
+    }
+
+    TASK_UPDATES {
+        int id PK
+        int task_id FK
+        int user_id FK
+        text yesterday_work
+        text today_plan
+        text blockers
+        int progress_percentage
+        numeric hours_spent
+        timestamp created_at
+    }
+
+    PROJECT_RISKS {
+        int id PK
+        int project_id FK
+        string risk_type
+        string severity
+        string title
+        text description
+        text suggested_mitigation
+        boolean detected_by_ai
+        boolean resolved
+    }
+
+    TEAM_PERFORMANCE {
+        int id PK
+        int project_id FK
+        int user_id FK
+        int tasks_completed
+        numeric average_completion_time_hrs
+        numeric productivity_score
+        numeric on_time_delivery_rate
+        date recorded_date
+    }
+
+    REPORTS {
+        int id PK
+        int project_id FK
+        int generated_by_id FK
+        string report_type
+        string title
+        text summary
+        jsonb metrics_json
+        text recommendations
+        string pdf_filename
+        string excel_filename
+    }
+
+    NOTIFICATIONS {
+        int id PK
+        int user_id FK
+        string title
+        text message
+        string type
+        boolean is_read
+        string action_url
+    }
+
+    FILES {
+        int id PK
+        int project_id FK
+        int task_id FK
+        int uploaded_by_id FK
+        string filename
+        string file_path
+        int file_size
+        string mime_type
+    }
+
+    CHAT_MESSAGES {
+        int id PK
+        int project_id FK
+        int sender_id FK
+        text message
+        int attachment_file_id FK
+        timestamp created_at
+    }

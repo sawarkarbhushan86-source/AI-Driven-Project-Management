@@ -1,0 +1,27 @@
+{
+  "best_model": "XGBoost",
+  "feature_columns": [
+    "task_count",
+    "completed_tasks",
+    "pending_tasks",
+    "team_size",
+    "average_completion_time",
+    "resource_allocation",
+    "historical_delays",
+    "blocker_count"
+  ],
+  "metrics": {
+    "r2_score": 0.9555195046720466,
+    "classifier_accuracy": 0.885
+  },
+  "feature_importances": {
+    "task_count": 0.0018281945958733559,
+    "completed_tasks": 0.002310788258910179,
+    "pending_tasks": 0.0035646995529532433,
+    "team_size": 0.0023054545745253563,
+    "average_completion_time": 0.03669639304280281,
+    "resource_allocation": 0.8025152087211609,
+    "historical_delays": 0.022177036851644516,
+    "blocker_count": 0.12860220670700073
+  }
+}
