@@ -8,7 +8,8 @@ import {
   mockUsers
 } from './mockData';
 
-const BASE_URL = 'http://localhost:8000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const BASE_URL = `${API_URL}/api/v1`;
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('access_token');
@@ -64,7 +65,7 @@ export const api = {
     try {
       const res = await fetch(`${BASE_URL}/projects/`, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return mockProjects;
   },
 
@@ -72,7 +73,7 @@ export const api = {
     try {
       const res = await fetch(`${BASE_URL}/projects/${id}`, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return mockProjects.find(p => p.id === Number(id)) || mockProjects[0];
   },
 
@@ -84,7 +85,7 @@ export const api = {
         body: JSON.stringify(data)
       });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return { id: Date.now(), ...data, health_score: 100, predicted_delay_days: 0, delay_risk_level: "LOW" };
   },
 
@@ -94,7 +95,7 @@ export const api = {
       const url = projectId ? `${BASE_URL}/tasks/?project_id=${projectId}` : `${BASE_URL}/tasks/`;
       const res = await fetch(url, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return projectId ? mockTasks.filter(t => t.project_id === Number(projectId)) : mockTasks;
   },
 
@@ -106,7 +107,7 @@ export const api = {
         body: JSON.stringify(data)
       });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return { id: Date.now(), ...data, progress_percentage: 0, is_at_risk: false };
   },
 
@@ -118,7 +119,7 @@ export const api = {
         body: JSON.stringify({ status, order_index: orderIndex })
       });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     const t = mockTasks.find(item => item.id === taskId);
     if (t) t.status = status;
     return t;
@@ -130,7 +131,7 @@ export const api = {
       const url = projectId ? `${BASE_URL}/updates/?project_id=${projectId}` : `${BASE_URL}/updates/`;
       const res = await fetch(url, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return mockTaskUpdates;
   },
 
@@ -142,7 +143,7 @@ export const api = {
         body: JSON.stringify(data)
       });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return { id: Date.now(), ...data, created_at: new Date().toISOString() };
   },
 
@@ -151,7 +152,7 @@ export const api = {
     try {
       const res = await fetch(`${BASE_URL}/dashboard/summary`, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return mockDashboardSummary;
   },
 
@@ -159,7 +160,7 @@ export const api = {
     try {
       const res = await fetch(`${BASE_URL}/dashboard/teacher/overview`, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return mockTeacherOverview;
   },
 
@@ -172,7 +173,7 @@ export const api = {
         body: JSON.stringify(data)
       });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     const workload = data.pending_tasks / (data.team_size * 4.0);
     const delay = Math.max(0, Math.round((workload * 1.5 + data.blocker_count * 1.8) * 10) / 10);
     return {
@@ -195,7 +196,7 @@ export const api = {
         body: JSON.stringify({ prompt, project_id: projectId, chat_history: chatHistory })
       });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return {
       response: `📊 **AI Project Copilot Analysis**:\n\nRegarding "${prompt}":\nThe predictive ML model indicates steady execution velocity. The primary critical path dependencies are within Jetson Orin edge optimization and distributed training bottlenecks.\n\n**Actionable Advice**:\n1. Dedicate the upcoming 24h sprint block to resolving active task blockers.\n2. Reassign documentation items to junior developers to protect core architect bandwidth.\n3. Conduct 15-minute cross-team synchronization at 10:00 AM.`,
       suggested_actions: ["Review At-Risk Tasks", "Trigger Sprint Rebalancing", "Export Weekly PDF Summary"],
@@ -207,7 +208,7 @@ export const api = {
     try {
       const res = await fetch(`${BASE_URL}/ai/recommendations/${projectId}`, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return [
       {
         title: "Resolve CUDA Memory Blocker",
@@ -232,7 +233,7 @@ export const api = {
       const url = projectId ? `${BASE_URL}/reports/?project_id=${projectId}` : `${BASE_URL}/reports/`;
       const res = await fetch(url, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return [
       {
         id: 1,
@@ -256,7 +257,7 @@ export const api = {
         body: JSON.stringify({ project_id: projectId, report_type: reportType, custom_notes: customNotes })
       });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return {
       id: Date.now(),
       project_id: projectId,
@@ -274,7 +275,7 @@ export const api = {
     try {
       const res = await fetch(`${BASE_URL}/notifications/`, { headers: getAuthHeaders() });
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return mockNotifications;
   }
 };
